@@ -9,8 +9,8 @@
 
 ## Ссылки на проект
 
-IP-адрес IP 51.250.9.254
+IP-адрес: IP 51.250.9.254
 
-Frontend https://vladdevs.nomoreparties.sbs
+Frontend: https://vladdevs.nomoreparties.sbs
 
-Backend https://api.vladdevs.nomoreparties.sbs
+Backend: https://api.vladdevs.nomoreparties.sbs
