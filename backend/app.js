@@ -18,7 +18,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'vladdevs.nomoreparties.sbs',
   credentials: true,
 }));
 
