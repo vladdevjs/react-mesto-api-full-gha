@@ -4,6 +4,7 @@ class Api {
   constructor(options) {
     this.baseUrl = options.baseUrl;
     this.headers = options.headers;
+    this.restoreToken();
   }
 
   _checkResponse(res) {
@@ -18,6 +19,13 @@ class Api {
       ...this.headers,
       authorization: `Bearer ${token}`,
     };
+  }
+
+  restoreToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.setToken(token);
+    }
   }
 
   getInitialCards() {
