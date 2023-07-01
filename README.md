@@ -11,6 +11,6 @@
 
 IP-адрес 51.250.9.254
 
-Frontend https://...
+Frontend https://vladdevs.nomoreparties.sbs
 
-Backend https://...
+Backend https://api.vladdevs.nomoreparties.sbs
