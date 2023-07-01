@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.9.254
+IP-адрес IP 51.250.9.254
 
 Frontend https://vladdevs.nomoreparties.sbs
 
