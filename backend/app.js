@@ -33,8 +33,7 @@ mongoose.connect(mongoURI, {
 
 app.use(requestLogger);
 app.get('/crash-test', crashTest);
-app.use(routes)
-
+app.use(routes);
 
 app.use('/', authRoutes);
 app.use('/', auth, userRoutes);
