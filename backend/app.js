@@ -4,6 +4,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const routes = require('./routes/index');
 const userRoutes = require('./routes/users');
 const cardRoutes = require('./routes/cards');
 const authRoutes = require('./routes/auths');
@@ -32,6 +33,9 @@ mongoose.connect(mongoURI, {
 
 app.use(requestLogger);
 app.get('/crash-test', crashTest);
+app.use(routes)
+
+
 app.use('/', authRoutes);
 app.use('/', auth, userRoutes);
 app.use('/', auth, cardRoutes);
