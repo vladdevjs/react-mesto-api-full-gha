@@ -54,9 +54,10 @@ const createUser = (req, res, next) => {
         next(new BadRequestError('Предоставлены некорректные данные'));
       } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
+      } else {
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 const login = (req, res, next) => {
