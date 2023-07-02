@@ -5,10 +5,6 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./routes/index');
-const userRoutes = require('./routes/users');
-const cardRoutes = require('./routes/cards');
-const authRoutes = require('./routes/auths');
-const auth = require('./middlewares/auth');
 const handleError = require('./middlewares/handleError');
 const crashTest = require('./middlewares/crashTest');
 const documentNotFound = require('./middlewares/documentNotFound');
@@ -34,11 +30,6 @@ mongoose.connect(mongoURI, {
 app.use(requestLogger);
 app.get('/crash-test', crashTest);
 app.use(routes);
-
-app.use('/', authRoutes);
-app.use('/', auth, userRoutes);
-app.use('/', auth, cardRoutes);
-
 app.use('*', documentNotFound);
 
 app.use(errorLogger);
