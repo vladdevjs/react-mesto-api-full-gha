@@ -19,7 +19,6 @@ const getUsers = (req, res, next) => {
 
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
-
   User.findById(userId)
     .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
     .then((user) => res.send(formatUser(user)))
@@ -73,11 +72,17 @@ const login = (req, res, next) => {
     .catch(next);
 };
 
-const updateUser = (req, res, next) => {
-  const { name, about } = req.body;
+const updateUserData = (req, res, next, ...params) => {
+  const update = {};
+  // eslint-disable-next-line no-restricted-syntax
+  for (const param of params) {
+    if (req.body[param] !== undefined) {
+      update[param] = req.body[param];
+    }
+  }
   User.findByIdAndUpdate(
     req.user._id,
-    { name, about },
+    update,
     { new: true, runValidators: true },
   )
     .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
@@ -91,22 +96,12 @@ const updateUser = (req, res, next) => {
     });
 };
 
+const updateUser = (req, res, next) => {
+  updateUserData(req, res, next, 'name', 'about');
+};
+
 const updateAvatar = (req, res, next) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    { new: true, runValidators: true },
-  )
-    .orFail(new NotFoundError('Запрашиваемый пользователь не найден'))
-    .then((user) => res.send(formatUser(user)))
-    .catch((err) => {
-      if (err instanceof ValidationError) {
-        next(new BadRequestError('Предоставлены некорректные данные'));
-      } else {
-        next(err);
-      }
-    });
+  updateUserData(req, res, next, 'avatar');
 };
 
 module.exports = {
