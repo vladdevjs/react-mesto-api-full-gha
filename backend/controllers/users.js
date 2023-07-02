@@ -8,7 +8,6 @@ const { secretKey } = require('../config');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
-const UnAuthError = require('../errors/unauth-err');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -42,41 +41,23 @@ const getUserInfo = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
+    name, about, avatar, email, password,
   } = req.body;
-
-  User.findOne({ email })
-    .then((existingUser) => {
-      if (existingUser) {
-        throw new ConflictError(
-          'Пользователь с таким email уже зарегистрирован',
-        );
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
+    .then((user) => {
+      res.send(formatUser(user));
+    })
+    .catch((err) => {
+      if (err instanceof ValidationError) {
+        next(new BadRequestError('Предоставлены некорректные данные'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       }
-
-      bcrypt
-        .hash(password, 10)
-        .then((hash) => User.create({
-          name,
-          about,
-          avatar,
-          email,
-          password: hash,
-        }))
-        .then((user) => {
-          res.send(formatUser(user));
-        })
-        .catch((err) => {
-          if (err instanceof ValidationError) {
-            next(new BadRequestError('Предоставлены некорректные данные'));
-          } else {
-            next(err);
-          }
-        });
-    }).catch(next);
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
@@ -89,9 +70,7 @@ const login = (req, res, next) => {
       });
       res.send({ token });
     })
-    .catch((err) => {
-      next(new UnAuthError(`Ошибка авторизации: ${err.message}`));
-    });
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {

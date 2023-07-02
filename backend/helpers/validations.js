@@ -1,5 +1,7 @@
 const { celebrate, Joi } = require('celebrate');
 
+const urlRegex = /^(https?|http):\/\/[^\s/$.?#].[^\s]*$/;
+
 const validateUserCreate = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email().messages({
@@ -39,9 +41,8 @@ const validateLogin = celebrate({
 
 const validateUserId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().hex().length(24)
+    userId: Joi.string().required().hex().length(24)
       .messages({
-        'string.alphanum': 'Идентификатор пользователя должен содержать только буквы и цифры',
         'string.hex': 'Идентификатор пользователя должен быть в формате шестнадцатеричной строки',
         'string.length': 'Идентификатор пользователя должен содержать {#limit} символов',
       }),
@@ -50,23 +51,27 @@ const validateUserId = celebrate({
 
 const validateAvatarLink = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().uri({ scheme: ['http', 'https'] }).messages({
+    avatar: Joi.string().required().regex(urlRegex).messages({
       'any.required': 'Ссылка обязательна для заполнения',
-      'string.uri': 'Введите корректную ссылку на аватар',
+      'string.pattern.base': 'Введите корректную ссылку на аватар',
     }),
   }),
 });
 
 const validateUserInfo = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).messages({
-      'string.min': 'Имя должно содержать минимум {#limit} символов',
-      'string.max': 'Имя должно содержать максимум {#limit} символов',
-    }),
-    about: Joi.string().min(2).max(30).messages({
-      'string.min': 'Описание должно содержать минимум {#limit} символов',
-      'string.max': 'Описание должно содержать максимум {#limit} символов',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'any.required': 'Имя обязательно для заполнения',
+        'string.min': 'Имя должно содержать минимум {#limit} символов',
+        'string.max': 'Имя должно содержать максимум {#limit} символов',
+      }),
+    about: Joi.string().required().min(2).max(30)
+      .messages({
+        'any.required': 'Описание обязательно для заполнения',
+        'string.min': 'Описание должно содержать минимум {#limit} символов',
+        'string.max': 'Описание должно содержать максимум {#limit} символов',
+      }),
   }),
 });
 
@@ -78,18 +83,17 @@ const validateCardData = celebrate({
         'string.min': 'Название должно содержать минимум {#limit} символов',
         'string.max': 'Название должно содержать максимум {#limit} символов',
       }),
-    link: Joi.string().required().uri({ scheme: ['http', 'https'] }).messages({
+    link: Joi.string().required().regex(urlRegex).messages({
       'any.required': 'Ссылка обязательна для заполнения',
-      'string.uri': 'Введите корректную ссылку на изображение',
+      'string.pattern.base': 'Введите корректную ссылку на изображение',
     }),
   }),
 });
 
 const validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().hex().length(24)
+    cardId: Joi.string().required().hex().length(24)
       .messages({
-        'string.alphanum': 'Идентификатор карточки должен содержать только буквы и цифры',
         'string.hex': 'Идентификатор карточки должен быть в формате шестнадцатеричной строки',
         'string.length': 'Идентификатор карточки должен содержать {#limit} символов',
       }),

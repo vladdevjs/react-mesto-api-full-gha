@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const userRoutes = require('./routes/users');
@@ -23,8 +22,8 @@ app.use(cors({
 }));
 
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 mongoose.connect(mongoURI, {
@@ -44,5 +43,6 @@ app.use(errors());
 app.use(handleError);
 
 app.listen(port, () => {
+  // eslint-disable-next-line no-console
   console.log(`Прослушиваю порт ${port}`);
 });
